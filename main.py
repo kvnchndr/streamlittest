@@ -48,7 +48,7 @@ else :
                 #if ps !=".":
                 #    df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
                 #else :
-                df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":""},regex=True)
+                df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":"",",00":"",",":""},regex=True)
                 df['buy_price_incl_vat']=pd.to_numeric(df['buy_price_incl_vat'])
             except ValueError as e:
                 st.error("Can't convert 'buy_price_incl_vat' column to the correct format, %s" %e)
@@ -59,7 +59,7 @@ else :
                     #if ps !=".":
                     #    df['retail_price_incl_vat']=df['retail_price_incl_vat'].str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
                     #else :
-                    df['retail_price_incl_vat']=df['retail_price_incl_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":""},regex=True)
+                    df['retail_price_incl_vat']=df['retail_price_incl_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":"",",":""},regex=True)
                     df['retail_price_incl_vat']=pd.to_numeric(df['retail_price_incl_vat'])
                 except ValueError as e:
                     st.error("Can't convert 'retail_price_incl_vat' column to the correct format, %s" %e)
@@ -70,7 +70,7 @@ else :
                         #if ps !=".":
                         #    df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
                         #else :
-                        df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":""},regex=True)
+                        df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":"",",":""},regex=True)
                         df['buy_price_promo_include_vat']=pd.to_numeric(df['buy_price_promo_include_vat'])
                     except ValueError as e:
                         st.error("Can't convert 'buy_price_promo_include_vat' column to the correct format, %s" %e)
