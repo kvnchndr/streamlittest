@@ -2,18 +2,15 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def get_ps(df):
-    ps = "."
-    try: 
-        df = df.astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
-        df.astype(float)
-    except ValueError as e :
-        i = int(str(e).split(" ")[-1])
-        if len(str(df[i]).split(",")[1])<=2:
-            ps = ","
-    else :
-        ps = "."
-    return ps
+#Function to determine point seperator
+def get_ps(df,i):
+  ps = "."
+  ts = ","
+  if df.loc[i].find('.')!=-1:
+    (ps,ts) = (',','.') if len(df.loc[i].split('.')[1])>=3 else ('.',',')
+  elif df.loc[i].find(',')!=-1 :
+    (ps,ts) = ('.',',') if len(df.loc[i].split(',')[1])>=3 else (',','.')
+  return df.loc[i].replace(ps,'koma').replace(ts,',').replace(',','').replace('koma','.')
 
 
 st.title("RRP Collector")
@@ -44,34 +41,35 @@ else :
             st.error("Date Format are Invalid, use %Y-%m-%d format") 
         else:
             try :
-                #ps = get_ps(df['buy_price_incl_vat'])
-                #if ps !=".":
-                #    df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
-                #else :
-                df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":"",",00":"",",":""},regex=True)
-                df['buy_price_incl_vat']=pd.to_numeric(df['buy_price_incl_vat'])
+                if df['buy_price_incl_vat'].dtypes == 'object':
+                    df['buy_price_incl_vat']=df['buy_price_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                    for i in range (len(df)):
+                        df['buy_price_incl_vat'].loc[i] = get_ps(df['buy_price_incl_vat'],i)
+                    df['buy_price_incl_vat'] = df['buy_price_incl_vat'].astype(float)
+                else :
+                    df['buy_price_incl_vat'] = df['buy_price_incl_vat'].astype(float)
             except ValueError as e:
                 st.error("Can't convert 'buy_price_incl_vat' column to the correct format, %s" %e)
             else : 
-                df['buy_price_incl_vat'] = df['buy_price_incl_vat'].astype(float)
                 try:
-                    #ps = get_ps(df['retail_price_incl_vat'])
-                    #if ps !=".":
-                    #    df['retail_price_incl_vat']=df['retail_price_incl_vat'].str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
-                    #else :
-                    df['retail_price_incl_vat']=df['retail_price_incl_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":"",",":""},regex=True)
-                    df['retail_price_incl_vat']=pd.to_numeric(df['retail_price_incl_vat'])
+                    if df['retail_price_incl_vat'].dtypes == 'object':
+                        df['retail_price_incl_vat']=df['retail_price_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                        for i in range (len(df)):
+                            df['retail_price_incl_vat'].loc[i] = get_ps(df['retail_price_incl_vat'],i)
+                        df['retail_price_incl_vat'] = df['retail_price_incl_vat'].astype(float)
+                    else :
+                        df['retail_price_incl_vat'] = df['retail_price_incl_vat'].astype(float)
                 except ValueError as e:
                     st.error("Can't convert 'retail_price_incl_vat' column to the correct format, %s" %e)
                 else : 
-                    df['retail_price_incl_vat'] = df['retail_price_incl_vat'].astype(float)
                     try:
-                        #ps = get_ps(df['buy_price_promo_include_vat'])
-                        #if ps !=".":
-                        #    df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].str.lower().replace({",":".","rp.":"","rp":"",".":""},regex=True)
-                        #else :
-                        df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].astype(str).str.lower().replace({",":"","rp.":"","rp":"",",00":"",",":""},regex=True)
-                        df['buy_price_promo_include_vat']=pd.to_numeric(df['buy_price_promo_include_vat'])
+                        if df['buy_price_promo_include_vat'].dtypes == 'object':
+                            df['buy_price_promo_include_vat']=df['buy_price_promo_include_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                            for i in range (len(df)):
+                                df['buy_price_promo_include_vat'].loc[i] = get_ps(df['buy_price_promo_include_vat'],i)
+                            df['buy_price_promo_include_vat'] = df['buy_price_promo_include_vat'].astype(float)
+                        else :
+                            df['buy_price_promo_include_vat'] = df['buy_price_promo_include_vat'].astype(float)
                     except ValueError as e:
                         st.error("Can't convert 'buy_price_promo_include_vat' column to the correct format, %s" %e)
                     else : 
