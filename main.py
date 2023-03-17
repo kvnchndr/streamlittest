@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 #Function to determine point seperator
+@st.cache_data
 def get_ps(df,i):
   ps = "."
   ts = ","
@@ -12,12 +13,16 @@ def get_ps(df,i):
     (ps,ts) = ('.',',') if len(df.loc[i].split(',')[1])>=3 else (',','.')
   return df.loc[i].replace(ps,'koma').replace(ts,',').replace(',','').replace('koma','.')
 
+@st.cache_data
+def read_data(df):
+  df = pd.read_csv(df)
+  return df
 
-st.title("RRP Collector")
+  st.title("RRP Collector")
 
 try:
     uploaded_file = st.file_uploader(label='')
-    df = pd.read_csv(uploaded_file) 
+    df = read_data(uploaded_file) 
 
 except ValueError:
     st.error(
