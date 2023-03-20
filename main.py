@@ -9,7 +9,8 @@ from google.cloud import storage
 
 # Create API client.
 #credentials = service_account.Credentials.from_service_account_info(
-#st.secrets["gcp_service_account"])
+#    st.secrets["gcp_service_account"]
+#)
 #client = storage.Client(credentials=credentials)
 #exportbucket = client.get_bucket('streamlit-bucket-testing')
 
@@ -125,10 +126,10 @@ else :
                                 st.error("Can't convert 'rbp_incl_vat' column to the correct format, %s" %e)
                             else : 
                                 totalrow = len(df)
-                                st.subheader("%s/%s rows of data are validated and ready to be uploaded"%(totalrow,totalrow))
+                                st.text("%s/%s rows of data are validated"%(totalrow,totalrow))
                                 st.write(df)
-                                st.subheader("Data Types")
-                                st.text(df.dtypes)
+                                file_container = st.expander('Data Types')
+                                file_container.text(df.dtypes)
                                 if st.button('Upload'):
                                     #exportbucket.blob('test {0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'text/csv')
                                     st.write('Done')
