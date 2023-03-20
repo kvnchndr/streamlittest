@@ -46,7 +46,7 @@ try:
 except ValueError:
     st.error(
             f"""
-                👆 Upload a .csv file first. RRP_[NamaPrincipal]_[Tanggal YYYYMMDD]: [contoh.csv](https://drive.google.com/file/d/1CDwxC3k01Mseu0fgt2hdHyW5o4riz0W_/view?usp=sharing)
+                👆 Upload a .csv file first: [contoh.csv](https://drive.google.com/file/d/1CDwxC3k01Mseu0fgt2hdHyW5o4riz0W_/view?usp=sharing)
                 """
     )
 except dt.ValidationError:
