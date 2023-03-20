@@ -31,7 +31,7 @@ def read_data(df):
   df = pd.read_csv(df)
   return df
 
-  st.title("RRP Collector")
+st.title("RRP Collector")
 
 
 try:
