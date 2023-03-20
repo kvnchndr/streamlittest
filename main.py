@@ -8,11 +8,11 @@ from google.oauth2 import service_account
 from google.cloud import storage
 
 # Create API client.
-credentials = service_account.Credentials.from_service_account_info(
+#credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
 )
-client = storage.Client(credentials=credentials)
-exportbucket = client.get_bucket('streamlit-bucket-testing')
+#client = storage.Client(credentials=credentials)
+#exportbucket = client.get_bucket('streamlit-bucket-testing')
 
 
 #Function to determine point seperator
@@ -131,7 +131,7 @@ else :
                                 st.subheader("Data Types")
                                 st.text(df.dtypes)
                                 if st.button('Upload'):
-                                    exportbucket.blob('test {0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'text/csv')
+                                    #exportbucket.blob('test {0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'text/csv')
                                     st.write('Done')
                                 else:
                                     st.write('')
