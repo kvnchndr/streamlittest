@@ -9,8 +9,7 @@ from google.cloud import storage
 
 # Create API client.
 #credentials = service_account.Credentials.from_service_account_info(
-#st.secrets["gcp_service_account"]
-)
+#st.secrets["gcp_service_account"])
 #client = storage.Client(credentials=credentials)
 #exportbucket = client.get_bucket('streamlit-bucket-testing')
 
