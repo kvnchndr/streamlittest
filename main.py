@@ -5,17 +5,15 @@ import numpy as np
 import datatest as dt
 import json
 import requests
-#from googleapiclient import discovery
-#from google.oauth2 import service_account
-#from google.cloud import storage
-
+from google.oauth2 import service_account
+from google.cloud import storage
 
 # Create API client.
-#credentials = service_account.Credentials.from_service_account_info(
-#    st.secrets["gcp_service_account"]
-#)
-#client = storage.Client(credentials=credentials)
-#exportbucket = client.get_bucket('streamlit-bucket-testing')
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"]
+)
+client = storage.Client(credentials=credentials)
+exportbucket = client.get_bucket('streamlit-bucket-testing')
 
 
 #Function to determine point seperator
@@ -134,22 +132,7 @@ else :
                                 file_container = st.expander('Data Types')
                                 file_container.text(df.dtypes)
                                 if st.button('Upload'):
-                                    #exportbucket.blob('test {0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'text/csv')
-                                    headers = {
-                                        "Authorization":"Bearer ya29.a0AVvZVsrhByNxwWBl6Dl-kncDXrRTlwniU5YlmPopBmjpfEq7LmhY6K9ZtX9Lk3bGYCeOSW6FTvn7JKaZyMI0OYcepEhDIuWKiqrwov3YL-LDpt9zFAMMSDEsE6j8UT_TJ7PDcDZRFzeOR4hcJHB_ec6QP1lYaCgYKAX8SARESFQGbdwaIW1HBgFuwBw0_z4QPlO6kOg0163"
-                                    }
-                                    para = {
-                                        "name":'test {0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d %X')),
-                                        "parents":["1VxTT8AKUIrRVqZLH-glT22w5rmmE39jr"]
-                                    }
-                                    files = {
-                                        'data':('metadata',json.dumps(para),'application/json;charset=UTF-8'),
-                                        'file':df.to_csv(index = False)
-                                    }
-                                    r = requests.post("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-                                        headers=headers,
-                                        files=files
-                                    )
+                                    exportbucket.blob('test-{0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d %X'))).upload_from_string(df.to_csv(),'csv')
                                     st.write('Done')
                                 else:
                                     st.write('')
