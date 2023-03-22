@@ -17,7 +17,6 @@ exportbucket = client.get_bucket('streamlit-bucket-testing')
 
 
 #Function to determine point seperator
-
 def get_ps(df,i):
     ps = "."
     ts = ","
@@ -35,23 +34,30 @@ def read_data(df):
 
 st.title("RRP, RBP, and Promo Plan")
 
+string_to_replace_dict = {"rp.":"","rp":""}
+
 try:
     uploaded_file = st.file_uploader(label='')
     df = read_data(uploaded_file)
     dt.validate(df.columns,{'principal', 'brand', 'product_code', 'product_description',
        'product_type', 'marketplace', 'official_store', 'start_date',
        'end_date', 'activity', 'rrp_incl_vat', 'promo_discount_percent',
-       'promo_discount_amount', 'rrp_promo_incl_vat', 'rbp_incl_vat'})
-    
-
+       'promo_discount_amount', 'rrp_promo_incl_vat', 'rbp_incl_vat'})    
 except ValueError:
     st.error(
             f"""
-                👆 Upload a .csv file first: [contoh.csv](https://drive.google.com/file/d/1CDwxC3k01Mseu0fgt2hdHyW5o4riz0W_/view?usp=sharing)
+                Upload a .csv file first: [Input Data.csv](https://docs.google.com/spreadsheets/d/1eNKYbBJ-FKBM-y4QDu4BiyqnywqgXIFRujABblVqWXc/edit#gid=0)
                 """
     )
-except dt.ValidationError:
-    st.error("Invalid data columns, please use the given .csv file here : [contoh.csv](https://drive.google.com/file/d/1CDwxC3k01Mseu0fgt2hdHyW5o4riz0W_/view?usp=sharing)")
+except dt.ValidationError as e:
+    st.error("Invalid schema, please use the new schema here: [Input Data.csv](https://docs.google.com/spreadsheets/d/1eNKYbBJ-FKBM-y4QDu4BiyqnywqgXIFRujABblVqWXc/edit#gid=0)")
+    headers = {
+    "selector": "th:not(.index_name)",
+    "props": "background-color: red;"
+    }
+    expander = st.expander("Show details")
+    expander.dataframe(df.style.set_table_styles([headers]).set_properties(**{'background-color': 'red'}))
+
 else :
     df['promo_discount_percent'].fillna(0,inplace=True)
     df['promo_discount_amount'].fillna(0,inplace=True)
@@ -61,63 +67,78 @@ else :
         invalid_rows = [index for index, row in df.loc[:].iterrows() if row.isnull().any()]
         invld = len(invalid_rows)
         validation = ('Invalid Row '+str(invld)+'/'+str(total))
-        file_container = st.expander(validation)
-        file_container.write(df.loc[invalid_rows])
-        
+        st.error("This field cannot be empty")
+        expander = st.expander("Show details")
+        expander.write(validation)
+        expander.dataframe(df.loc[invalid_rows].style.highlight_null(null_color='red'))    
     else:
         try:
             df['start_date']=pd.to_datetime(df['start_date'],format="%Y-%m-%d")
             df['end_date']=pd.to_datetime(df['end_date'],format="%Y-%m-%d")
         except ValueError as e:
-            st.error("Date Format are Invalid, use %Y-%m-%d format") 
+            st.error("Date format are invalid, please use YYYY-mm-dd format")
+            expander = st.expander("Show details")
+            expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['start_date','end_date']))   
         else:
             try :
                 if df['rrp_incl_vat'].dtypes == 'object':
-                    df['rrp_incl_vat']=df['rrp_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                    df['rrp_incl_vat']=df['rrp_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                     for i in range (len(df)):
                         df['rrp_incl_vat'].loc[i] = get_ps(df['rrp_incl_vat'],i)
                     df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float)
                 else :
                     df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float)
             except ValueError as e:
-                st.error("Can't convert 'rrp_incl_vat' column to the correct format, %s" %e)
+                st.error("Can't convert 'rrp_incl_vat' column to the correct format")
+                expander = st.expander("Show details")
+                expander.error(e)
+                expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['rrp_incl_vat']))
             else : 
                 try:
                     if df['promo_discount_percent'].dtypes == 'object':
-                        df['promo_discount_percent']=df['promo_discount_percent'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                        df['promo_discount_percent']=df['promo_discount_percent'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                         for i in range (len(df)):
                             df['promo_discount_percent'].loc[i] = get_ps(df['promo_discount_percent'],i)
                         df['promo_discount_percent'] = df['promo_discount_percent'].astype(float)
                     else :
                         df['promo_discount_percent'] = df['promo_discount_percent'].astype(float)
                 except ValueError as e:
-                    st.error("Can't convert 'promo_discount_percent' column to the correct format, %s" %e)
+                    st.error("Can't convert 'promo_discount_percent' column to the correct format")
+                    expander = st.expander("Show details")
+                    expander.error(e)
+                    expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['promo_discount_percent']))
                 else : 
                     try:
                         if df['promo_discount_amount'].dtypes == 'object':
-                            df['promo_discount_amount']=df['promo_discount_amount'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                            df['promo_discount_amount']=df['promo_discount_amount'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                             for i in range (len(df)):
                                 df['promo_discount_amount'].loc[i] = get_ps(df['promo_discount_amount'],i)
                             df['promo_discount_amount'] = df['promo_discount_amount'].astype(float)
                         else :
                             df['promo_discount_amount'] = df['promo_discount_amount'].astype(float)
                     except ValueError as e:
-                        st.error("Can't convert 'promo_discount_amount' column to the correct format, %s" %e)
+                        st.error("Can't convert 'promo_discount_amount' column to the correct format")
+                        expander = st.expander("Show details")
+                        expander.error(e)
+                        expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['promo_discount_amount']))
                     else : 
                         try:
                             if df['rrp_promo_incl_vat'].dtypes == 'object':
-                                df['rrp_promo_incl_vat']=df['rrp_promo_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                                df['rrp_promo_incl_vat']=df['rrp_promo_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                                 for i in range (len(df)):
                                     df['rrp_promo_incl_vat'].loc[i] = get_ps(df['rrp_promo_incl_vat'],i)
                                 df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float)
                             else :
                                 df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float)
                         except ValueError as e:
-                            st.error("Can't convert 'rrp_promo_incl_vat' column to the correct format, %s" %e)
+                            st.error("Can't convert 'rrp_promo_incl_vat' column to the correct format")
+                            expander = st.expander("Show details")
+                            expander.error(e)
+                            expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['rrp_promo_incl_vat']))
                         else : 
                             try:
                                 if df['rbp_incl_vat'].dtypes == 'object':
-                                    df['rbp_incl_vat']=df['rbp_incl_vat'].astype(str).str.lower().replace({"rp.":"","rp":""},regex=True)
+                                    df['rbp_incl_vat']=df['rbp_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                                     for i in range (len(df)):
                                         df['rbp_incl_vat'].loc[i] = get_ps(df['rbp_incl_vat'],i)
                                     df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float)
@@ -125,14 +146,23 @@ else :
                                     df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float)
                             except ValueError as e:
                                 st.error("Can't convert 'rbp_incl_vat' column to the correct format, %s" %e)
+                                expander = st.expander("Show details")
+                                expander.error(e)
+                                expander.dataframe(df.style.set_properties(**{'background-color': 'red'},subset=['rbp_incl_vat']))  
                             else : 
                                 totalrow = len(df)
-                                st.text("%s/%s rows of data are validated"%(totalrow,totalrow))
-                                st.write(df)
-                                file_container = st.expander('Data Types')
-                                file_container.text(df.dtypes)
+                                st.subheader("Validation Completed")
+                                expander = st.expander("show details")
+                                expander.write("%s/%s rows of data are validated"%(totalrow,totalrow))
+                                expander.dataframe(df)  
+                                #file_container = st.expander('Data Types')
+                                #file_container.text(df.dtypes)
                                 if st.button('Upload'):
-                                    exportbucket.blob('test-{0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d %X'))).upload_from_string(df.to_csv(),'csv')
-                                    st.write('Done')
+                                    try:
+                                        exportbucket.blob('test-local{0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'csv')
+                                    except ValueError as e:
+                                        st.error('Upload failed')
+                                    else:
+                                        st.write('Upload Success!')
                                 else:
                                     st.write('')
