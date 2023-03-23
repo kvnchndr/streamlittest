@@ -26,6 +26,9 @@ def get_ps(df,i):
         (ps,ts) = ('.',',') if len(df.loc[i].split(',')[1])>=3 else (',','.')
     return df.loc[i].replace(ps,'koma').replace(ts,',').replace(',','').replace('koma','.')
 
+def read_data(df):
+    df = pd.read_csv(df)
+    return df
 
 st.title("RRP, RBP, and Promo Plan")
 
@@ -37,7 +40,7 @@ if uploaded_file is None :
     st.error("Upload a .csv file first: [Input Data.csv](https://docs.google.com/spreadsheets/d/1eNKYbBJ-FKBM-y4QDu4BiyqnywqgXIFRujABblVqWXc/edit#gid=0)")
 else :
     try:
-        df = pd.read_csv(uploaded_file)
+        df = read_data(uploaded_file)
         dt.validate(df.columns,{'principal', 'brand', 'product_code', 'product_description',
         'product_type', 'marketplace', 'official_store', 'start_date',
         'end_date', 'activity', 'rrp_incl_vat', 'promo_discount_percent',
@@ -62,7 +65,8 @@ else :
             invalid_rows = [index for index, row in df.loc[:].iterrows() if row.isnull().any()]
             invld = len(invalid_rows)
             validation = ('Invalid Row '+str(invld)+'/'+str(total))
-            st.error("This field cannot be empty")
+            empty = df.columns[df.isna().any()].tolist()
+            st.error("%s field cannot be empty"%(empty))
             expander = st.expander("Show details")
             expander.write(validation)
             expander.dataframe(df.loc[invalid_rows].style.highlight_null(null_color='red'))    
