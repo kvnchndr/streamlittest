@@ -89,7 +89,7 @@ else :
         expander.dataframe(df.style.set_table_styles([headers]).set_properties(**{'background-color': 'red'}))
 
     else :
-        df = df.dropna(axis = 0, how = 'all')
+        df.dropna(axis = 0, how = 'all').reset_index(drop=True,inplace=True)
         df['promo_discount_percent'].fillna(0,inplace=True)
         df['promo_discount_amount'].fillna(0,inplace=True)
         df['rrp_promo_incl_vat'].fillna(0,inplace=True)
