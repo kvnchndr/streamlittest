@@ -89,7 +89,7 @@ else :
         expander.dataframe(df.style.set_table_styles([headers]).set_properties(**{'background-color': 'red'}))
 
     else :
-        df.dropna(axis = 0, how = 'all').reset_index(drop=True,inplace=True)
+        df.dropna(axis = 0, how = 'all').reset_index(drop=True)
         df['promo_discount_percent'].fillna(0,inplace=True)
         df['promo_discount_amount'].fillna(0,inplace=True)
         df['rrp_promo_incl_vat'].fillna(0,inplace=True)
@@ -104,7 +104,7 @@ else :
             st.error("%s field cannot be empty"%(empty))
             expander = st.expander("Show details")
             expander.write(validation)
-            expander.dataframe(df.loc[invalid_rows].style.highlight_null(null_color='red'))    
+            expander.dataframe(df.loc[invalid_rows].style.highlight_null(color='red'))    
         else:
             try:
                 df['start_date']=pd.to_datetime(df['start_date'],format="%Y-%m-%d")
