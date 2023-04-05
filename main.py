@@ -14,13 +14,13 @@ from uuid import uuid4
 credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
 )
-client = bigquery.Client(credentials=credentials, project = "sirclo-data-prod")
+client = bigquery.Client(credentials=credentials, project = "sirclo-prod")
 
 
 def upload_bq(df):
     
-    target_table = 'marketplace.streamlit_upload_testing'
-    project_id = "sirclo-data-prod"
+    target_table = 'marketplace.rrp_promo'
+    project_id = "sirclo-prod"
     df.to_gbq(target_table, project_id=project_id, if_exists='append', progress_bar=True, credentials=credentials)
 
 def error_log(e,official_store):
@@ -204,8 +204,8 @@ else :
                                     df['OS'] = official_store
                                     df['create_date'] = datetime.datetime.utcnow().strftime('%Y-%m-%d %X')
                                     df['create_date'] = pd.to_datetime(df['create_date'])
-                                    #for i in range (len(df)):
-                                    #    df.loc[i,'uid']=datetime.datetime.utcnow().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
+                                    for i in range (len(df)):
+                                        df.loc[i,'uid']=datetime.datetime.utcnow().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
                                     #file_container = st.expander('Data Types')
                                     #file_container.text(df.dtypes)
                                     if st.button('Upload'):
