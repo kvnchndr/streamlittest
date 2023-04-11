@@ -195,28 +195,42 @@ else :
                                     df2 = findtext('rbp_incl_vat',e)
                                     expander.error(e)
                                     expander.dataframe(df2.style.set_properties(**{'background-color': 'red'},subset=['rbp_incl_vat']))  
-                                else : 
-                                    totalrow = len(df)
-                                    st.subheader("Validation Completed")
-                                    expander = st.expander("show details")
-                                    expander.write("%s/%s rows of data are validated"%(totalrow,totalrow))
-                                    expander.dataframe(df)
-                                    df['OS'] = official_store
-                                    df['create_date'] = datetime.datetime.utcnow().strftime('%Y-%m-%d %X')
-                                    df['create_date'] = pd.to_datetime(df['create_date'])
-                                    for i in range (len(df)):
-                                        df.loc[i,'uid']=datetime.datetime.utcnow().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
-                                    #file_container = st.expander('Data Types')
-                                    #file_container.text(df.dtypes)
-                                    if st.button('Upload'):
-                                        try:
-                                            #exportbucket.blob('test-local{0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'csv')
-                                            upload_bq(df)
-                                            
-                                        except ValueError as e:
-                                            #error_log(e,official_store)
-                                            st.error('Upload failed,%s'%e)
-                                        else:
-                                            st.write('Upload Success!')
+                                else :
+                                    e_index = []
+                                    for i in range(len(df)):
+                                        if len(df.loc[i,'product_code'])<6:
+                                            e_index.append(i)
+                                        else :
+                                            continue
+                                    if e_index !=[]:
+                                        st.error("Please check this product_code below, Are you sure the product_code is less than 6 character ?")
+                                        expander = st.expander("Show details")
+                                        expander.dataframe(df.loc[e_index].style.set_properties(**{'background-color': 'red'},subset=['product_code']))
                                     else:
-                                        st.write('')
+                                        totalrow = len(df)
+                                        st.subheader("Validation Completed")
+                                        expander = st.expander("show details")
+                                        expander.write("%s/%s rows of data are validated"%(totalrow,totalrow))
+                                        expander.dataframe(df)
+                                        for i in ('principal','brand','product_code','product_description','product_type','marketplace','official_store'):
+                                            df[i] = df[i].str.strip()
+                                        df['product_type']=df['product_type'].str.title()
+                                        df['OS'] = official_store
+                                        df['create_date'] = datetime.datetime.utcnow().strftime('%Y-%m-%d %X')
+                                        df['create_date'] = pd.to_datetime(df['create_date'])
+                                        for i in range (len(df)):
+                                            df.loc[i,'uid']=datetime.datetime.utcnow().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
+                                        #file_container = st.expander('Data Types')
+                                        #file_container.text(df.dtypes)
+                                        if st.button('Upload'):
+                                            try:
+                                                #exportbucket.blob('test-local{0}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d'))).upload_from_string(df.to_csv(),'csv')
+                                                upload_bq(df)
+
+                                            except ValueError as e:
+                                                #error_log(e,official_store)
+                                                st.error('Upload failed,%s'%e)
+                                            else:
+                                                st.write('Upload Success!')
+                                        else:
+                                            st.write('')
