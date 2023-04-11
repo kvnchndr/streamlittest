@@ -121,9 +121,9 @@ else :
                         df['rrp_incl_vat']=df['rrp_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                         for i in range (len(df)):
                             df.loc[i,'rrp_incl_vat'] = get_ps(df['rrp_incl_vat'],i)
-                        df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float)
+                        df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float).abs()
                     else :
-                        df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float)
+                        df['rrp_incl_vat'] = df['rrp_incl_vat'].astype(float).abs()
                 except ValueError as e:
                     #error_log(e,official_store)
                     st.error("Can't convert 'rrp_incl_vat' column to the correct format")
@@ -137,9 +137,9 @@ else :
                             df['promo_discount_percent']=df['promo_discount_percent'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                             for i in range (len(df)):
                                 df.loc[i,'promo_discount_percent'] = get_ps(df['promo_discount_percent'],i)
-                            df['promo_discount_percent'] = df['promo_discount_percent'].astype(float)
+                            df['promo_discount_percent'] = df['promo_discount_percent'].astype(float).abs()
                         else :
-                            df['promo_discount_percent'] = df['promo_discount_percent'].astype(float)
+                            df['promo_discount_percent'] = df['promo_discount_percent'].astype(float).abs()
                     except ValueError as e:
                         #error_log(e,official_store)
                         st.error("Can't convert 'promo_discount_percent' column to the correct format")
@@ -153,9 +153,9 @@ else :
                                 df['promo_discount_amount']=df['promo_discount_amount'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                                 for i in range (len(df)):
                                     df.loc[i,'promo_discount_amount'] = get_ps(df['promo_discount_amount'],i)
-                                df['promo_discount_amount'] = df['promo_discount_amount'].astype(float)
+                                df['promo_discount_amount'] = df['promo_discount_amount'].astype(float).abs()
                             else :
-                                df['promo_discount_amount'] = df['promo_discount_amount'].astype(float)
+                                df['promo_discount_amount'] = df['promo_discount_amount'].astype(float).abs()
                         except ValueError as e:
                             #error_log(e,official_store)
                             st.error("Can't convert 'promo_discount_amount' column to the correct format")
@@ -169,9 +169,9 @@ else :
                                     df['rrp_promo_incl_vat']=df['rrp_promo_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                                     for i in range (len(df)):
                                         df.loc[i,'rrp_promo_incl_vat']  = get_ps(df['rrp_promo_incl_vat'],i)
-                                    df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float)
+                                    df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float).abs()
                                 else :
-                                    df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float)
+                                    df['rrp_promo_incl_vat'] = df['rrp_promo_incl_vat'].astype(float).abs()
                             except ValueError as e:
                                 #error_log(e,official_store)
                                 st.error("Can't convert 'rrp_promo_incl_vat' column to the correct format")
@@ -185,9 +185,9 @@ else :
                                         df['rbp_incl_vat']=df['rbp_incl_vat'].astype(str).str.lower().replace(string_to_replace_dict,regex=True)
                                         for i in range (len(df)):
                                             df.loc[i,'rbp_incl_vat'] = get_ps(df['rbp_incl_vat'],i)
-                                        df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float)
+                                        df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float).abs()
                                     else :
-                                        df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float)
+                                        df['rbp_incl_vat'] = df['rbp_incl_vat'].astype(float).abs()
                                 except ValueError as e:
                                     #error_log(e,official_store)
                                     st.error("Can't convert 'rbp_incl_vat' column to the correct format")
