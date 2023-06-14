@@ -1,0 +1,7 @@
+UpdateLog main.py
+===========
+2023-06-14 
+===========
++ Added new field validation promo_campaign_name, Required for Promo SKU
++ Added new Logic, RBP < RRP (for all SKU)
++ Added new Logic, start_date < end_date
