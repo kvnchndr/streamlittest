@@ -5,3 +5,10 @@ UpdateLog main.py
 + Added new field validation promo_campaign_name, Required for Promo SKU
 + Added new Logic, RBP < RRP (for all SKU)
 + Added new Logic, start_date < end_date
+===========
+2023-07-14
+===========
++ Validate Principal and OS based on Master Data Commercial 
++ Validate product_type only accept Assembly, Single, Gimmick
++ Added new Logic, RBP and RRP = 0 only for gimmick
++ Added new Logic, start_date < end_date
