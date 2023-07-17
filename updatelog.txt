@@ -11,4 +11,5 @@ UpdateLog main.py
 + Validate Principal and OS based on Master Data Commercial 
 + Validate product_type only accept Assembly, Single, Gimmick
 + Added new Logic, RBP and RRP = 0 only for gimmick
++ Updated main script, new validation can be added directly without changing the previous validation
 
