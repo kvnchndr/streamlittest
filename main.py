@@ -95,7 +95,7 @@ product_type = ['Assembly','Single','Gimmick']
 numerical_column = ['rrp_incl_vat', 'promo_discount_percent',
     'promo_discount_amount', 'rrp_promo_incl_vat', 'rbp_incl_vat']
 varchar_column = ['principal','brand','product_code','product_description','product_type','marketplace',
-    'official_store','activity','promo_campaign_name']
+    'official_store','activity']
 
 SHEET_ID = '1ipc6iMh9adYIFcqzg_wnVt3ftzAUjCng7Z6fP5z6Ib4'
 SHEET_NAME = 'os'
