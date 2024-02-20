@@ -110,7 +110,7 @@ principal_list = df['principal'].dropna().tolist()
 
 
 uploaded_file = st.file_uploader(label='Upload Input Files',label_visibility='collapsed')
-if uploaded_file is None :
+-if uploaded_file is None :
     st.error("Upload a .csv file first: [Input Data.csv](https://docs.google.com/spreadsheets/d/1eNKYbBJ-FKBM-y4QDu4BiyqnywqgXIFRujABblVqWXc/edit#gid=0)")
     exit()
 try:
