@@ -109,7 +109,7 @@ principal_list = df['principal'].dropna().tolist()
 
 try:
     1=0
-except 
+except:
     st.error('Please access the new platform in https://vision.sirclo.net/commercial')
 
 # uploaded_file = st.file_uploader(label='Upload Input Files',label_visibility='collapsed')
