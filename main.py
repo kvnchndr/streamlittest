@@ -97,20 +97,17 @@ numerical_column = ['rrp_incl_vat', 'promo_discount_percent',
 varchar_column = ['principal','brand','product_code','product_description','product_type','marketplace',
     'official_store','activity']
 
-SHEET_ID = '1ipc6iMh9adYIFcqzg_wnVt3ftzAUjCng7Z6fP5z6Ib4'
-SHEET_NAME = 'os'
-url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}'
-df = pd.read_csv(url)
-a = ",".join(df['official_store'])
-official_store = st.selectbox('Please choose the official Store',a.split(','))
+st.error('Please access the new platform in https://vision.sirclo.net/commercial')
 
-os_list = df['official_store'].tolist()
-principal_list = df['principal'].dropna().tolist()
+# SHEET_ID = '1ipc6iMh9adYIFcqzg_wnVt3ftzAUjCng7Z6fP5z6Ib4'
+# SHEET_NAME = 'os'
+# url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}'
+# df = pd.read_csv(url)
+# a = ",".join(df['official_store'])
+# official_store = st.selectbox('Please choose the official Store',a.split(','))
 
-try:
-    1==0
-except:
-    st.error('Please access the new platform in https://vision.sirclo.net/commercial')
+# os_list = df['official_store'].tolist()
+# principal_list = df['principal'].dropna().tolist()
 
 # uploaded_file = st.file_uploader(label='Upload Input Files',label_visibility='collapsed')
 # if uploaded_file is None :
